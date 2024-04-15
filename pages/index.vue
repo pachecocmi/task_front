@@ -13,7 +13,7 @@
                 <button v-if="mode === 'list'"
                     class="text-sm bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded"
                     @click="switchMode('completed')">
-                    Completed ({{tasks.length}})</button>
+                    Completed</button>
             </div>
         </div>
         <div v-if="mode === 'list' || mode === 'completed'" class="w-1/2 m-auto">
