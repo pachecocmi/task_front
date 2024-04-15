@@ -13,7 +13,7 @@
                 <button v-if="mode === 'list'"
                     class="text-sm bg-transparent hover:bg-green-500 text-green-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded"
                     @click="switchMode('completed')">
-                    Completed</button>
+                    Completed ({{tasks.length}})</button>
             </div>
         </div>
         <div v-if="mode === 'list' || mode === 'completed'" class="w-1/2 m-auto">
@@ -31,7 +31,7 @@
                 </li>
             </ul>
         </div>
-        <div v-else-if="mode === 'create' || mode === 'update'">
+        <div v-else-if="mode === 'create' || mode === 'update'" class="w-1/2 m-auto">
             <h2>{{ mode === 'create' ? 'Create' : 'Update' }} Task</h2>
             <form @submit.prevent="submitForm">
                 <div>
