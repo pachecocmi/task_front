@@ -19,7 +19,9 @@
         <div v-if="mode === 'list' || mode === 'completed'" class="w-1/2 m-auto">
             <ul>
                 <li v-for="task in tasks" :key="task.id" class="mb-2 grid grid-cols-3">
-                    <div class="grid-start-1" @click="switchMode('update', task)">{{ task . description }}</div>
+                    <div v-if="mode === 'list'" class="grid-start-1" @click="switchMode('update', task)">{{ task . description }}</div>
+                    <div v-else-if="mode === 'completed'" class="grid-start-1">{{ task . description }}</div>
+
                     <div v-if="mode === 'list'" class="grid-end-1 col-span-2 text-end">
                         <button
                             class="text-sm bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded mr-1"
@@ -61,14 +63,18 @@
                 id = ref(''),
                 description = ref('');
 
-            function switchMode(newMode, task) {
+            async function switchMode(newMode, task) {
+                if (newMode !== 'update' && newMode !== 'create') {
+                    status.value = newMode == 'completed' ? 1 : 0;
+                    await fetchTasks();
+                }
+
                 mode.value = newMode;
                 if (newMode == 'update') {
                     id.value = task.id,
                         description.value = task.description;
                 }
 
-                status.value = newMode == 'completed' ? 1 : 0;
             }
 
             async function fetchTasks() {
@@ -85,7 +91,6 @@
             async function createTask(taskData) {
                 try {
                     const response = await axios.post(uri + '/task/create', taskData);
-                    await fetchTasks(); // Refresh tasks after creating
                     switchMode('list');
                 } catch (error) {
                     console.error('Error creating task:', error);
@@ -95,7 +100,6 @@
             async function updateTask(taskData) {
                 try {
                     const response = await axios.post(uri + '/task/update', taskData);
-                    await fetchTasks(); // Refresh tasks after updating
                     switchMode('list');
                 } catch (error) {
                     console.error('Error updating task:', error);
